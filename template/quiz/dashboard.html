@@ -1,0 +1,27 @@
+{% extends 'quiz/main.html' %}
+{% load static %}
+{% block content %}
+
+  <div class="jumbotron">
+
+    {% if user.is_authenticated %}
+        <h2>Hello {{ user.username }}</h2><br><br>
+        <table>
+            <tr>
+                <th>quiz id</th>
+                <th>quiz</th>
+            </tr>
+            {% for q in quizzes %}
+            <tr>
+                    <td>{{q.id}}</td>
+                    <td><a href="{% url 'question' q.id 0 %}">{{q.title}}</a><br></td>
+                </tr>
+            {% endfor %}
+        </table>
+
+    {% else %}
+        <p>You need to Register or Login</p>
+    {% endif %}
+  </div>
+
+{% endblock %}

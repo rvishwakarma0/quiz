@@ -1,0 +1,61 @@
+{% extends 'quiz/main.html' %}
+{% load static %}
+
+{% block content %}
+
+    <table class="center">
+        <tr>
+        <th>{{question.question_text}}</th>
+        </tr>
+        <form id="answer">{% csrf_token %}
+            <input type="hidden" id="qid" value="{{question.id}}">
+            <tr><td>a</td><td><input type="radio" name="choice" id="choice" value="a"></td><td>{{question.a}}</td></tr>
+            <tr><td>b</td><td><input type="radio" name="choice" id="choice" value="b"></td><td>{{question.b}}</td></tr>
+            <tr><td>c</td><td><input type="radio" name="choice" id="choice" value="c"></td><td>{{question.c}}</td></tr>
+            <tr><td>d</td><td><input type="radio" name="choice" id="choice" value="d"></td><td>{{question.d}}</td></tr>
+            <tr><td>
+                <input type="submit" value="submit">
+            </td></tr>
+        </form>
+        <tr>
+            <td><h3><div id="content"></div></h3></td>
+            <td><a href=""  id="next"> Next </a></td>
+        </tr>
+
+   </table>
+<script type="text/javascript">
+  // Submit post on submit
+$('#answer').on('submit', function(event){
+    event.preventDefault();
+    console.log("answer submitted!")  // sanity check
+    submit_answer();
+});
+
+function submit_answer() {
+    console.log("answer sumit is working!") // sanity check
+    var ele = document.getElementsByName('choice');
+
+            for(i = 0; i < ele.length; i++) {
+                if(ele[i].checked)
+                    var choice = ele[i].value;
+            }
+
+    $.ajax({
+        url : "{% url 'answer' quiz_id %}", // the endpoint
+        type : "POST", // http method
+        data : {
+            qid : $('#qid').val(),
+            choice : choice,
+            csrfmiddlewaretoken : $('input[name=csrfmiddlewaretoken]').val()
+         }, // data sent with the post request
+
+        // handle a successful response
+        success : function(json) {
+            document.getElementById("content").innerHTML = json;
+            document.getElementById("next").href="{% url 'question' quiz_id qno %}";
+            console.log("success"); // another sanity check
+        }
+    });
+};
+</script>
+{% endblock %}
