@@ -27,6 +27,22 @@
                 <td>{{score}}</td>
             </tr>
         </table>
+        <table>
+            <tr>
+                <th>question</th>
+                <th>answer given</th>
+                <th>correct answer</th>
+            </tr>
+            {% for a in student_answer %}
+                {% if a.question.quiz == quiz %}
+                    <tr>
+                        <td>{{a.question.question_text}}</td>
+                        <td>{{a.answer}}</td>
+                        <td>{{a.question.answer}}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </table>
 
     {% else %}
         <p>You need to Register or Login</p>
